@@ -6,6 +6,7 @@ const {
   UpdateUserById_Q,
   DeleteUserById_Q,
   FindUserById_Name_Q,
+  GetPassword_Q,
 } = require("../quries/Quser");
 
 const client = new Client({
@@ -53,6 +54,14 @@ class userRepositry {
     }
   }
 
+  async getPassword(u_name) {
+    try {
+      return await client.query(GetPassword_Q, [u_name]);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findUserById(id) {
     try {
       return await client.query(FindUserById_Q, [id]);
@@ -68,6 +77,7 @@ class userRepositry {
       throw error;
     }
   }
+
   async getUserById(id) {
     try {
       const result = await client.query(FindUserById_Q, [id]);

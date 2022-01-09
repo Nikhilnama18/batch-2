@@ -3,6 +3,10 @@ public.users (id,u_name,u_email, u_password, houseno, street, city, state, zip)
 values ($1,$2,$3,$4,$5,$6,$7,$8,$9)
 returning *`;
 
+const GetPassword_Q = ` select u_password
+ from public.users 
+ where u_name =$1`;
+
 const FindUserById_Q = `Select * from 
 public.users where id =$1`;
 
@@ -36,4 +40,5 @@ module.exports = {
   UpdateUserById_Q,
   DeleteUserById_Q,
   FindUserById_Name_Q,
+  GetPassword_Q,
 };

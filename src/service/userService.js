@@ -1,4 +1,6 @@
 const UserRepositry = require("../repositry/userRepositry");
+const bcrypt = require("bcrypt");
+const util = require("util");
 const userRepositry = new UserRepositry();
 
 class UserService {
@@ -9,6 +11,10 @@ class UserService {
         user_obj.username
       );
       if (userPresent.rowCount <= 0) {
+        user_obj.password = await bcrypt.hash(
+          user_obj.password,
+          parseInt(process.env.saltRounds)
+        );
         return await userRepositry.createUser(user_obj);
       } else {
         userPresent.rowCount = 0;
@@ -18,6 +24,20 @@ class UserService {
       throw error;
     }
   }
+
+  async getPassword(u_name, u_password) {
+    try {
+      const result = await userRepositry.getPassword(u_name);
+      if (result.rowCount <= 0) {
+        return false;
+      }
+
+      return await bcrypt.compare(u_password, result.rows[0].u_password);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getUserById(userID) {
     try {
       return await userRepositry.getUserById(userID);
