@@ -51,7 +51,7 @@ router.post(
         });
       }
     } catch (error) {
-      console.log("error from userRegister", error);
+      next(error);
     }
   }
 );

@@ -2,6 +2,7 @@ const UserRepositry = require("../repositry/userRepositry");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const userRepositry = new UserRepositry();
+const { UpdateError } = require("../util/customErrors");
 
 class UserService {
   async createUser(user_obj) {
@@ -55,12 +56,17 @@ class UserService {
 
   async updateUser(user_obj) {
     try {
+      // Check new username
+      const result = await userRepositry.findUserByName(user_obj.username);
+      if (result.rowCount > 0) throw new UpdateError("User Name already exits");
+
+      // Check requested id
       const res = await userRepositry.findUserById(user_obj.id);
-      if (res.rowCount >= 0) {
-        return await userRepositry.updateUserById(user_obj);
-      } else {
-        return;
-      }
+      if (res.rowCount <= 0)
+        throw new UpdateError(`Sorry user With ID ${user_obj.id} not found`);
+
+      // Update user details
+      return await userRepositry.updateUserById(user_obj);
     } catch (error) {
       throw error;
     }

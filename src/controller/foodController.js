@@ -13,7 +13,7 @@ router.get("/", async (req, res, next) => {
     const result = await foodService.getAllFood();
     res.status(200).send(result.rows);
   } catch (error) {
-    console.log("Error is getAllFood controller ", error);
+    next(error);
   }
 });
 
@@ -49,7 +49,7 @@ router.get("/:foodID", async (req, res, next) => {
     });
     res.end();
   } catch (error) {
-    console.log("Error in register :", error);
+    next(error);
   }
 });
 
@@ -96,7 +96,7 @@ router.post(
       });
       res.end();
     } catch (error) {
-      console.log("Error in register put :", error);
+      next(error);
     }
   }
 );
@@ -143,36 +143,40 @@ router.put(
       res.status(200).send(result.rows[0]);
       res.end();
     } catch (error) {
-      console.log("Error in food put ", error);
+      next(error);
     }
   }
 );
 
 router.delete("/:foodID", async (req, res, next) => {
-  const foodID = req.params.foodID;
+  try {
+    const foodID = req.params.foodID;
 
-  // foodID validation
-  if (!isNumeric(foodID)) {
-    res.status(400).json({
-      Message: "ID should be of type integer",
-    });
-    return;
-  }
+    // foodID validation
+    if (!isNumeric(foodID)) {
+      res.status(400).json({
+        Message: "ID should be of type integer",
+      });
+      return;
+    }
 
-  const result = await foodService.deleteFoodById(foodID);
+    const result = await foodService.deleteFoodById(foodID);
 
-  if (result.rowCount <= 0) {
-    // food Item not present
-    res.status(404).json({
-      Message: `Sorry Food with foodId ${foodID} not present`,
+    if (result.rowCount <= 0) {
+      // food Item not present
+      res.status(404).json({
+        Message: `Sorry Food with foodId ${foodID} not present`,
+      });
+      res.end();
+      return;
+    }
+
+    res.status(200).json({
+      Message: `Deleted FoodItem with ID ${foodID}`,
     });
     res.end();
-    return;
+  } catch (error) {
+    next(error);
   }
-
-  res.status(200).json({
-    Message: `Deleted FoodItem with ID ${foodID}`,
-  });
-  res.end();
 });
 module.exports = router;

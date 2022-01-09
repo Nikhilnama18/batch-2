@@ -10,6 +10,9 @@ const GetPassword_Q = ` select u_password
 const FindUserById_Q = `Select * from 
 public.users where id =$1`;
 
+const FindUserByName_Q = `Select * from 
+public.users where u_name =$1`;
+
 const FindUserById_Name_Q = `Select * from 
 public.users where id =$1 or u_name=$2`;
 
@@ -41,4 +44,5 @@ module.exports = {
   DeleteUserById_Q,
   FindUserById_Name_Q,
   GetPassword_Q,
+  FindUserByName_Q,
 };

@@ -29,7 +29,7 @@ router.get("/:userID", async (req, res, next) => {
       res.end();
     }
   } catch (error) {
-    console.log("Error in UC get ", error);
+    next(error);
   }
 });
 
@@ -39,7 +39,7 @@ router.get("/", async (req, res, next) => {
     res.status(200).send(result);
     res.end();
   } catch (error) {
-    console.log("error in get user ", error);
+    next(error);
   }
 });
 
@@ -81,39 +81,36 @@ router.put(
       };
 
       const result = await userService.updateUser(user_obj);
-      if (result != undefined) {
-        res.status(200).send(result);
-      } else {
-        res.status(400).json({
-          Message: `Sorry user With ID ${user_obj.id} not found`,
-        });
-        res.end();
-      }
+      return res.status(200).send(result);
     } catch (error) {
-      console.log("error in put user", error);
+      next(error);
     }
   }
 );
 
 router.delete("/:userID", async (req, res, next) => {
-  const userID = req.params.userID;
-  // ID validation
-  if (!isNumeric(userID)) {
-    res.status(400).json({
-      Message: "ID should be of type integer",
-    });
-    return;
-  }
-  const result = await userService.deleteUserById(userID);
-  if (result.rowCount <= 0) {
-    res.status(404).json({
-      Message: `Sorry user With ID ${userID} not found`,
-    });
+  try {
+    const userID = req.params.userID;
+    // ID validation
+    if (!isNumeric(userID)) {
+      res.status(400).json({
+        Message: "ID should be of type integer",
+      });
+      return;
+    }
+    const result = await userService.deleteUserById(userID);
+    if (result.rowCount <= 0) {
+      res.status(404).json({
+        Message: `Sorry user With ID ${userID} not found`,
+      });
+      res.end();
+      return;
+    }
+    res.status(200).json({ Message: `User Deleted Succussfully` });
     res.end();
-    return;
+  } catch (error) {
+    next(error);
   }
-  res.status(200).json({ Message: `User Deleted Succussfully` });
-  res.end();
 });
 
 module.exports = router;

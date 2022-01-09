@@ -29,7 +29,7 @@ const authentication = (req, res, next) => {
       next();
     });
   } catch (error) {
-    throw error;
+    next(error);
   }
 };
 

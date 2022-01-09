@@ -30,13 +30,19 @@ router.post(
           message: "Invalid User credentials",
         });
 
-      const jwtToken = jwt.sign(req.body.username, process.env.PrivateKey);
+      const jwtToken = jwt.sign(
+        { username: req.body.username },
+        process.env.PrivateKey,
+        {
+          expiresIn: "24h",
+        }
+      );
       res.status(200).json({
         message: "User logged in successful",
         token: jwtToken,
       });
     } catch (error) {
-      throw error;
+      next(error);
     }
   }
 );

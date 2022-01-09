@@ -1,6 +1,7 @@
 const express = require("express");
 const routingIndex = require("./controller/index");
 const cors = require("cors");
+const { BaseError } = require("./util/customErrors");
 const app = express();
 
 // body-parse
@@ -24,10 +25,13 @@ app.use((req, res, next) => {
 });
 
 // Error Handling
+
 app.use((err, req, res, next) => {
   console.log("[ISE] :", err);
+  if (err instanceof BaseError)
+    return res.status(err.statusCode).json({ message: err.message });
 
-  res
+  return res
     .status(500)
     .send({ message: "Internal Server Error. Please check back later." });
 });
