@@ -1,8 +1,10 @@
 const express = require("express");
-const router = express();
 const UserService = require("../service/userService");
-const userService = new UserService();
 const { body, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
+
+const userService = new UserService();
+const router = express();
 
 router.post(
   "/",

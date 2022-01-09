@@ -1,4 +1,5 @@
 const { Client } = require("pg");
+const jwt = require("jsonwebtoken");
 const {
   CreateUser_Q,
   FindUserById_Q,
@@ -33,7 +34,6 @@ class userRepositry {
         user_obj.address.state,
         user_obj.address.zip,
       ]);
-
       const res_obj = {
         id: result.rows[0].id,
         username: result.rows[0].u_name,

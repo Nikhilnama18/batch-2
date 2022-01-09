@@ -3,12 +3,14 @@ const userRegister = require("./userRegister");
 const userAuthenticate = require("./userAuthenticate");
 const userController = require("./userController");
 const foodController = require("./foodController");
-const route = express();
+const authentication = require("../util/authentication");
+const router = express();
 
-route.use("/register", userRegister);
-route.use("/authenticate", userAuthenticate);
-route.use("/users", userController);
+router.use("/register", userRegister);
+router.use("/authenticate", userAuthenticate);
 
-route.use("/food", foodController);
+router.use("/users", authentication, userController);
 
-module.exports = route;
+router.use("/food", authentication, foodController);
+
+module.exports = router;

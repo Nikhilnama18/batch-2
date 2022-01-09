@@ -1,6 +1,7 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 const UserService = require("../service/userService");
+const jwt = require("jsonwebtoken");
 const router = express();
 
 const userService = new UserService();
@@ -13,24 +14,26 @@ router.post(
     try {
       const ValidationErr = validationResult(req);
       if (!ValidationErr.isEmpty()) {
-        res.status(404).json({
-          Message: "Validation Error",
+        return res.status(404).json({
+          Message: "Validation Error ",
         });
       }
-      
-      const result = await userService.getPassword(
+
+      const result = await userService.verifyPassword(
         req.body.username,
         req.body.password
       );
-      if (result == true) {
-        res.status(200).json({
-          message: "User logged in successful",
-        });
-      } else {
-        res.status(403).json({
+
+      if (!result)
+        return res.status(403).json({
           message: "Invalid User credentials",
         });
-      }
+
+      const jwtToken = jwt.sign(req.body.username, process.env.PrivateKey);
+      res.status(200).json({
+        message: "User logged in successful",
+        token: jwtToken,
+      });
     } catch (error) {
       throw error;
     }

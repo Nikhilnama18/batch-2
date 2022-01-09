@@ -1,6 +1,6 @@
 const UserRepositry = require("../repositry/userRepositry");
 const bcrypt = require("bcrypt");
-const util = require("util");
+const jwt = require("jsonwebtoken");
 const userRepositry = new UserRepositry();
 
 class UserService {
@@ -25,13 +25,12 @@ class UserService {
     }
   }
 
-  async getPassword(u_name, u_password) {
+  async verifyPassword(u_name, u_password) {
     try {
       const result = await userRepositry.getPassword(u_name);
       if (result.rowCount <= 0) {
         return false;
       }
-
       return await bcrypt.compare(u_password, result.rows[0].u_password);
     } catch (error) {
       throw error;
