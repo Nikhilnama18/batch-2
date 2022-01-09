@@ -109,19 +109,22 @@ class userRepositry {
       user_obj.address.zip,
     ]);
 
-    const res_obj = {
-      id: result.rows[0].id,
-      username: result.rows[0].u_name,
-      email: result.rows[0].u_email,
-      password: result.rows[0].u_password,
-      address: {
-        houseno: result.rows[0].houseno,
-        street: result.rows[0].street,
-        city: result.rows[0].city,
-        state: result.rows[0].state,
-        zip: result.rows[0].zip,
-      },
-    };
+    var res_obj;
+    if (result.rowCount > 0) {
+      res_obj = {
+        id: result.rows[0].id,
+        username: result.rows[0].u_name,
+        email: result.rows[0].u_email,
+        password: result.rows[0].u_password,
+        address: {
+          houseno: result.rows[0].houseno,
+          street: result.rows[0].street,
+          city: result.rows[0].city,
+          state: result.rows[0].state,
+          zip: result.rows[0].zip,
+        },
+      };
+    }
     return res_obj;
   }
 }

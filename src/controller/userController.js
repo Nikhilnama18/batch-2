@@ -1,6 +1,7 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 const UserService = require("../service/userService");
+var { isNumeric } = require("validator").default;
 
 const userService = new UserService();
 const router = express();
@@ -8,8 +9,17 @@ const router = express();
 router.get("/:userID", async (req, res, next) => {
   try {
     const userID = req.params.userID;
+
+    // ID validation
+    if (!isNumeric(userID)) {
+      res.status(400).json({
+        message: "ID should be of type integer",
+      });
+      return;
+    }
+
     const result = await userService.getUserById(userID);
-    console.log("Returned result is ", result);
+
     if (result != undefined) {
       res.status(200).send(result);
       res.end();

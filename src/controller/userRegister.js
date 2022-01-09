@@ -19,7 +19,10 @@ router.post(
     try {
       const validationErr = validationResult(req);
       if (!validationErr.isEmpty()) {
-        console.log("Validation err", validationErr);
+        res.status(404).json({
+          message: "Validaion Error",
+        });
+        return;
       }
       const user_obj = {
         id: req.body.id,
