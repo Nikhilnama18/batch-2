@@ -10,30 +10,39 @@ router.post(
   body("username").isString(),
   body("email").isEmail(),
   body("password").isString(),
-  // body('houseno').isNumeric(),
-  // body('street').isString(),
-  // body('city').isString(),
-  // body('state').isString(),
-  // body('zip').isNumeric().isLength({min: 6}),
+  body("address.houseno").isNumeric(),
+  body("address.street").isString(),
+  body("address.city").isString(),
+  body("address.state").isString(),
+  body("address.zip").isNumeric().isLength({ min: 6 }),
   async (req, res, next) => {
     try {
-      const user = {
+      const validationErr = validationResult(req);
+      if (!validationErr.isEmpty()) {
+        console.log("Validation err", validationErr);
+      }
+      const user_obj = {
         id: req.body.id,
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
-        // address={
-        // houseno=req.body.houseno,
-        // street=req.body.street,
-        // city= req.body.city,
-        // state= req.body.stat,
-        // zip: req.body.zip
-        // }
+        address: {
+          houseno: req.body.address.houseno,
+          street: req.body.address.street,
+          city: req.body.address.city,
+          state: req.body.address.state,
+          zip: req.body.address.zip,
+        },
       };
-      const result = await userService.createUser(user);
-      if (result != 0) {
+
+      const result = await userService.createUser(user_obj);
+      if (result.rowCount != 0) {
         res.status(200).send(result);
         res.end();
+      } else {
+        res.status(401).json({
+          message: `User with id ${user_obj.id} is already present`,
+        });
       }
     } catch (error) {
       console.log("error from userRegister", error);

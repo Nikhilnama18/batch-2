@@ -76,31 +76,35 @@ router.put(
   body("foodType").isIn(["Indian", "Chinese", "Mexican"]).isString(),
 
   async (req, res, next) => {
-    const validationErr = validationResult(req);
+    try {
+      const validationErr = validationResult(req);
 
-    if (!validationErr.isEmpty()) {
-      // throw a validaion error
-      console.log("Validation Error ", validationErr);
-    }
+      if (!validationErr.isEmpty()) {
+        // throw a validaion error
+        console.log("Validation Error ", validationErr);
+      }
 
-    const food_obj = {
-      id: req.body.id,
-      foodId: req.body.foodId,
-      foodName: req.body.foodName,
-      foodCost: req.body.foodCost,
-      foodType: req.body.foodType,
-    };
-    const result = await foodService.updateFoodById(food_obj);
-    if (result.rowCount <= 0) {
-      // food Item not presnt
-      res.status(404).json({
-        message: `Sorry Food with foodId ${req.body.foodId} not present`,
-      });
+      const food_obj = {
+        id: req.body.id,
+        foodId: req.body.foodId,
+        foodName: req.body.foodName,
+        foodCost: req.body.foodCost,
+        foodType: req.body.foodType,
+      };
+      const result = await foodService.updateFoodById(food_obj);
+      if (result.rowCount <= 0) {
+        // food Item not presnt
+        res.status(404).json({
+          message: `Sorry Food with foodId ${req.body.foodId} not present`,
+        });
+        res.end();
+      }
+      // if present
+      res.status(200).send(result.rows[0]);
       res.end();
+    } catch (error) {
+      console.log("Error in food put ", error);
     }
-    // if present
-    res.status(200).send(result.rows[0]);
-    res.end();
   }
 );
 

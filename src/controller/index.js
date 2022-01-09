@@ -7,7 +7,7 @@ const route = express();
 
 route.use("/register", userRegister);
 // route.use("/authenticate", userAuthenticate);
-// route.use("/users", userController);
+route.use("/users", userController);
 
 route.use("/food", foodController);
 
