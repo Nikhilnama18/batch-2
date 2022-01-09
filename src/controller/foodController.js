@@ -6,11 +6,12 @@ const router = express();
 //create an Object for FoodService class
 const foodService = new FoodService();
 
+// get Food Item based on ID
 router.get("/:foodID", async (req, res, next) => {
   try {
     const foodID = req.params.foodID;
     const result = await foodService.findFoodByID(foodID);
-    //Food Not found 
+    //Food Not found
     if (result.rowCount <= 0) {
       res.status(400).json({
         Message: "Sorry Food Not Found",
@@ -28,6 +29,7 @@ router.get("/:foodID", async (req, res, next) => {
   } catch (error) {}
 });
 
+// Create a Food Item
 router.post(
   "/",
   body("foodId").isNumeric(),
@@ -60,6 +62,45 @@ router.post(
     } catch (error) {
       console.log(error);
     }
+  }
+);
+
+// Update Food Item
+
+router.put(
+  "/",
+  body("id").isNumeric(),
+  body("foodId").isNumeric(),
+  body("foodName").isString(),
+  body("foodCost").isNumeric(),
+  body("foodType").isIn(["Indian", "Chinese", "Mexican"]).isString(),
+
+  async (req, res, next) => {
+    const validationErr = validationResult(req);
+
+    if (!validationErr.isEmpty()) {
+      // throw a validaion error
+      console.log("Validation Error ", validationErr);
+    }
+
+    const food_obj = {
+      id: req.body.id,
+      foodId: req.body.foodId,
+      foodName: req.body.foodName,
+      foodCost: req.body.foodCost,
+      foodType: req.body.foodType,
+    };
+    const result = await foodService.updateFoodById(food_obj);
+    if (result.rowCount <= 0) {
+      // food Item not presnt
+      res.status(404).json({
+        message: `Sorry Food with foodId ${req.body.foodId} not present`,
+      });
+      res.end();
+    }
+    // if present
+    res.status(200).send(result.rows[0]);
+    res.end();
   }
 );
 
