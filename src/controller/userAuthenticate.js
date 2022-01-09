@@ -12,10 +12,11 @@ router.post(
   body("password").isString(),
   async (req, res, next) => {
     try {
-      const ValidationErr = validationResult(req);
-      if (!ValidationErr.isEmpty()) {
+      const validationErr = validationResult(req);
+      if (!validationErr.isEmpty()) {
         return res.status(404).json({
           Message: "Validation Error ",
+          ...validationErr,
         });
       }
 

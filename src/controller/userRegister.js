@@ -21,11 +21,12 @@ router.post(
     try {
       const validationErr = validationResult(req);
       if (!validationErr.isEmpty()) {
-        res.status(404).json({
+        return res.status(404).json({
           message: "Validaion Error",
+          ...validationErr,
         });
-        return;
       }
+
       const user_obj = {
         id: req.body.id,
         username: req.body.username,

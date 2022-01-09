@@ -67,6 +67,7 @@ router.post(
         // throw Validation error
         res.status(404).json({
           Message: "Validation Error",
+          ...validationErr,
         });
         return;
       }
@@ -118,6 +119,7 @@ router.put(
         // throw a validaion error
         res.status(404).json({
           Message: "Validation Error",
+          ...validationErr,
         });
         return;
       }

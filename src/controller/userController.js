@@ -61,6 +61,7 @@ router.put(
         // throw validation error
         res.status(404).json({
           Message: "Validation Error",
+          ...validationErr,
         });
         return;
       }

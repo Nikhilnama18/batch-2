@@ -6,19 +6,30 @@ const app = express();
 // body-parse
 app.use(express.json());
 app.use(cors());
+
+// Log all incomming requests info to console.
+app.use((req, res, next) => {
+  console.log(`Hit at ${req.url} , METHOD : ${req.method} `);
+  next();
+});
+
 // routing the requests
 app.use("/api", routingIndex);
 
-// Error Handling
-
-// TODO: return resource not 404 error
-
-// default server endponit
+// No resource matched
 app.use((req, res, next) => {
-  res.status(201).json({
-    message: "Connected to Server",
+  res.status(404).json({
+    message: "Requested resource not found.",
   });
-  res.end();
+});
+
+// Error Handling
+app.use((err, req, res, next) => {
+  console.log("[ISE] :", err);
+
+  res
+    .status(500)
+    .send({ message: "Internal Server Error. Please check back later." });
 });
 
 module.exports = app;
