@@ -17,9 +17,18 @@ where id=$1 and foodId=$2
 returning *
 `;
 
+const GetALLFoodItems_Q = `select * from public.food_items`;
+
+const DeleteFoodById_Q = `delete  from 
+ public.food_items 
+    where foodId=$1
+    returning *`;
+
 module.exports = {
   CreateFood_Q,
   FindFoodById_Q,
   UpdateFoodById_Q,
   FindFoodById_FID_Q,
+  DeleteFoodById_Q,
+  GetALLFoodItems_Q,
 };

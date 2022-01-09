@@ -21,7 +21,10 @@ set id =$1,
 where id=$1
 returning *`;
 
-const DeleteUserById_Q = ``;
+const DeleteUserById_Q = `delete  from 
+ public.users 
+    where id=$1
+    returning *`;
 
 module.exports = {
   CreateUser_Q,

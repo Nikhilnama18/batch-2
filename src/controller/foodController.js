@@ -7,6 +7,16 @@ const { isNumeric } = require("validator").default;
 //create an Object for FoodService class
 const foodService = new FoodService();
 
+// get All Food Items
+router.get("/", async (req, res, next) => {
+  try {
+    const result = await foodService.getAllFood();
+    res.status(200).send(result.rows);
+  } catch (error) {
+    console.log("Error is getAllFood controller ", error);
+  }
+});
+
 // get Food Item based on ID
 router.get("/:foodID", async (req, res, next) => {
   try {
@@ -26,6 +36,7 @@ router.get("/:foodID", async (req, res, next) => {
       res.status(400).json({
         Message: "Sorry Food Not Found",
       });
+      return;
     }
 
     //Food Found
@@ -120,9 +131,9 @@ router.put(
       };
       const result = await foodService.updateFoodById(food_obj);
       if (result.rowCount <= 0) {
-        // food Item not presnt
+        // food Item not present
         res.status(404).json({
-          message: `Sorry Food with foodId ${req.body.foodId} not present`,
+          message: `Sorry Food with foodId ${food_obj.foodId} not present`,
         });
         res.end();
       }
@@ -134,4 +145,32 @@ router.put(
     }
   }
 );
+
+router.delete("/:foodID", async (req, res, next) => {
+  const foodID = req.params.foodID;
+
+  // foodID validation
+  if (!isNumeric(foodID)) {
+    res.status(400).json({
+      message: "ID should be of type integer",
+    });
+    return;
+  }
+
+  const result = await foodService.deleteFoodById(foodID);
+
+  if (result.rowCount <= 0) {
+    // food Item not present
+    res.status(404).json({
+      message: `Sorry Food with foodId ${foodID} not present`,
+    });
+    res.end();
+    return;
+  }
+
+  res.status(200).json({
+    message: `Deleted FoodItem with ID ${foodID}`,
+  });
+  res.end();
+});
 module.exports = router;
