@@ -8,7 +8,7 @@ const router = express();
 
 router.get("/:userID", async (req, res, next) => {
   try {
-
+    const userID = req.params.userID;
     // ID validation
     if (!isNumeric(userID)) {
       res.status(400).json({
@@ -59,7 +59,10 @@ router.put(
       const validationErr = validationResult(req);
       if (!validationErr.isEmpty()) {
         // throw validation error
-        console.log("Validation error");
+        res.status(404).json({
+          message: "Validation Error",
+        });
+        return;
       }
 
       const user_obj = {
@@ -90,5 +93,26 @@ router.put(
     }
   }
 );
+
+router.delete("/:userID", async (req, res, next) => {
+  const userID = req.params.userID;
+  // ID validation
+  if (!isNumeric(userID)) {
+    res.status(400).json({
+      message: "ID should be of type integer",
+    });
+    return;
+  }
+  const result = await userService.deleteUserById(userID);
+  if (result.rowCount <= 0) {
+    res.status(404).json({
+      message: `User with ID ${userID} not found `,
+    });
+    res.end();
+    return;
+  }
+  res.status(200).json({ message: `User with ID ${userID} deleted` });
+  res.end();
+});
 
 module.exports = router;

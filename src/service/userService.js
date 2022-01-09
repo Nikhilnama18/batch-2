@@ -12,25 +12,45 @@ class UserService {
         return userPresent;
       }
     } catch (error) {
-      console.log("Error is userSerivce", error);
+      throw error;
     }
   }
   async getUserById(userID) {
-    return await userRepositry.getUserById(userID);
+    try {
+      return await userRepositry.getUserById(userID);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getAllUsers() {
-    return await userRepositry.getAllUsers();
+    try {
+      return await userRepositry.getAllUsers();
+    } catch (error) {
+      throw error;
+    }
   }
 
   async updateUser(user_obj) {
-    const res = await userRepositry.findUserById(user_obj.id);
-    if (res.rowCount >= 0) {
-      return await userRepositry.updateUserById(user_obj);
-    } else {
-      return;
+    try {
+      const res = await userRepositry.findUserById(user_obj.id);
+      if (res.rowCount >= 0) {
+        return await userRepositry.updateUserById(user_obj);
+      } else {
+        return;
+      }
+    } catch (error) {
+      throw error;
     }
   }
-  async deleteUser() {}
+  async deleteUserById(userID) {
+    try {
+      const result = await userRepositry.findUserById(userID);
+      if (result.rowCount <= 0) return result;
+      return await userRepositry.deleteUserById(userID);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 module.exports = UserService;
