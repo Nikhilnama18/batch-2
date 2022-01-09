@@ -2,6 +2,7 @@ const express = require("express");
 const FoodService = require("../service/foodService");
 const { body, validationResult } = require("express-validator");
 const router = express();
+const { isNumeric } = require("validator").default;
 
 //create an Object for FoodService class
 const foodService = new FoodService();
@@ -10,13 +11,23 @@ const foodService = new FoodService();
 router.get("/:foodID", async (req, res, next) => {
   try {
     const foodID = req.params.foodID;
+
+    // foodID validation
+    if (!isNumeric(foodID)) {
+      res.status(400).json({
+        message: "ID should be of type integer",
+      });
+      return;
+    }
     const result = await foodService.findFoodByID(foodID);
+
     //Food Not found
     if (result.rowCount <= 0) {
       res.status(400).json({
         Message: "Sorry Food Not Found",
       });
     }
+
     //Food Found
     res.status(201).json({
       id: result.rows[0].id,
@@ -26,7 +37,9 @@ router.get("/:foodID", async (req, res, next) => {
       foodType: result.rows[0].foodtype,
     });
     res.end();
-  } catch (error) {}
+  } catch (error) {
+    console.log("Error in register :", error);
+  }
 });
 
 // Create a Food Item
@@ -41,8 +54,12 @@ router.post(
       const validationErr = validationResult(req);
       if (!validationErr.isEmpty()) {
         // throw Validation error
-        console.log("Validations not done");
+        res.status(404).json({
+          message: "Validation Error",
+        });
+        return;
       }
+
       const food_obj = {
         foodId: req.body.foodId,
         foodName: req.body.foodName,
@@ -51,6 +68,13 @@ router.post(
       };
 
       const result = await foodService.createFoodItem(food_obj);
+      // Already Present
+      if (result.rowCount == 0) {
+        res.status(404).json({
+          message: `Food with ID ${food_obj.foodId} present`,
+        });
+        return;
+      }
       res.status(201).json({
         id: result.rows[0].id,
         foodId: result.rows[0].foodid,
@@ -60,7 +84,7 @@ router.post(
       });
       res.end();
     } catch (error) {
-      console.log(error);
+      console.log("Error in register put :", error);
     }
   }
 );
@@ -81,7 +105,10 @@ router.put(
 
       if (!validationErr.isEmpty()) {
         // throw a validaion error
-        console.log("Validation Error ", validationErr);
+        res.status(404).json({
+          message: "Validation Error",
+        });
+        return;
       }
 
       const food_obj = {
@@ -107,5 +134,4 @@ router.put(
     }
   }
 );
-
 module.exports = router;

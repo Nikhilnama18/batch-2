@@ -8,6 +8,7 @@ class FoodService {
       return await foodRepositry.createFoodItem(food_obj);
     } else {
       // Handle is Already present
+      foodPresent.rowCount = 0;
       return foodPresent;
     }
   }
@@ -24,7 +25,7 @@ class FoodService {
       // foodItem not present
       return foodPresent;
     }
-    
+
     const result = await foodRepositry.updateFoodById(food_obj);
     return result;
   }

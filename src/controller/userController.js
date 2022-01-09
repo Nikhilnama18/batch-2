@@ -1,14 +1,13 @@
 const express = require("express");
 const { body, validationResult } = require("express-validator");
 const UserService = require("../service/userService");
-var { isNumeric } = require("validator").default;
+const { isNumeric } = require("validator").default;
 
 const userService = new UserService();
 const router = express();
 
 router.get("/:userID", async (req, res, next) => {
   try {
-    const userID = req.params.userID;
 
     // ID validation
     if (!isNumeric(userID)) {
