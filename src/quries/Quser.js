@@ -6,6 +6,9 @@ returning *`;
 const FindUserById_Q = `Select * from 
 public.users where id =$1`;
 
+const FindUserById_Name_Q = `Select * from 
+public.users where id =$1 or u_name=$2`;
+
 const GetAllUsers_Q = `select * from public.users`;
 
 const UpdateUserById_Q = `update public.users 
@@ -32,4 +35,5 @@ module.exports = {
   GetAllUsers_Q,
   UpdateUserById_Q,
   DeleteUserById_Q,
+  FindUserById_Name_Q,
 };

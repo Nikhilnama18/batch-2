@@ -40,11 +40,11 @@ router.post(
 
       const result = await userService.createUser(user_obj);
       if (result.rowCount != 0) {
-        res.status(200).send(result);
+        res.status(201).send(result);
         res.end();
       } else {
         res.status(401).json({
-          message: `User with id ${user_obj.id} is already present`,
+          message: `User with ID: ${user_obj.id} or Name:   ${user_obj.username} is already present`,
         });
       }
     } catch (error) {

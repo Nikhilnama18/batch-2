@@ -25,7 +25,7 @@ router.get("/:foodID", async (req, res, next) => {
     // foodID validation
     if (!isNumeric(foodID)) {
       res.status(400).json({
-        message: "ID should be of type integer",
+        Message: "ID should be of type integer",
       });
       return;
     }
@@ -66,7 +66,7 @@ router.post(
       if (!validationErr.isEmpty()) {
         // throw Validation error
         res.status(404).json({
-          message: "Validation Error",
+          Message: "Validation Error",
         });
         return;
       }
@@ -82,7 +82,7 @@ router.post(
       // Already Present
       if (result.rowCount == 0) {
         res.status(404).json({
-          message: `Food with ID ${food_obj.foodId} present`,
+          Message: `Food with ID ${food_obj.foodId} present`,
         });
         return;
       }
@@ -117,7 +117,7 @@ router.put(
       if (!validationErr.isEmpty()) {
         // throw a validaion error
         res.status(404).json({
-          message: "Validation Error",
+          Message: "Validation Error",
         });
         return;
       }
@@ -133,7 +133,7 @@ router.put(
       if (result.rowCount <= 0) {
         // food Item not present
         res.status(404).json({
-          message: `Sorry Food with foodId ${food_obj.foodId} not present`,
+          Message: `Sorry Food with foodId ${food_obj.foodId} not present`,
         });
         res.end();
       }
@@ -152,7 +152,7 @@ router.delete("/:foodID", async (req, res, next) => {
   // foodID validation
   if (!isNumeric(foodID)) {
     res.status(400).json({
-      message: "ID should be of type integer",
+      Message: "ID should be of type integer",
     });
     return;
   }
@@ -162,14 +162,14 @@ router.delete("/:foodID", async (req, res, next) => {
   if (result.rowCount <= 0) {
     // food Item not present
     res.status(404).json({
-      message: `Sorry Food with foodId ${foodID} not present`,
+      Message: `Sorry Food with foodId ${foodID} not present`,
     });
     res.end();
     return;
   }
 
   res.status(200).json({
-    message: `Deleted FoodItem with ID ${foodID}`,
+    Message: `Deleted FoodItem with ID ${foodID}`,
   });
   res.end();
 });

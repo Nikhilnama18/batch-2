@@ -12,7 +12,7 @@ router.get("/:userID", async (req, res, next) => {
     // ID validation
     if (!isNumeric(userID)) {
       res.status(400).json({
-        message: "ID should be of type integer",
+        Message: "ID should be of type integer",
       });
       return;
     }
@@ -24,7 +24,7 @@ router.get("/:userID", async (req, res, next) => {
       res.end();
     } else {
       res.status(400).json({
-        message: `Sorry user with ID ${userID} not found`,
+        Message: `Sorry user With ID ${userID} not found`,
       });
       res.end();
     }
@@ -60,7 +60,7 @@ router.put(
       if (!validationErr.isEmpty()) {
         // throw validation error
         res.status(404).json({
-          message: "Validation Error",
+          Message: "Validation Error",
         });
         return;
       }
@@ -81,10 +81,10 @@ router.put(
 
       const result = await userService.updateUser(user_obj);
       if (result != undefined) {
-        res.status(201).send(result);
+        res.status(200).send(result);
       } else {
         res.status(400).json({
-          message: `Sorry user with ID ${user_obj.id} not found`,
+          Message: `Sorry user With ID ${user_obj.id} not found`,
         });
         res.end();
       }
@@ -99,19 +99,19 @@ router.delete("/:userID", async (req, res, next) => {
   // ID validation
   if (!isNumeric(userID)) {
     res.status(400).json({
-      message: "ID should be of type integer",
+      Message: "ID should be of type integer",
     });
     return;
   }
   const result = await userService.deleteUserById(userID);
   if (result.rowCount <= 0) {
     res.status(404).json({
-      message: `User with ID ${userID} not found `,
+      Message: `Sorry user With ID ${userID} not found`,
     });
     res.end();
     return;
   }
-  res.status(200).json({ message: `User with ID ${userID} deleted` });
+  res.status(200).json({ Message: `User Deleted Succussfully` });
   res.end();
 });
 

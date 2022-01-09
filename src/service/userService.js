@@ -4,7 +4,10 @@ const userRepositry = new UserRepositry();
 class UserService {
   async createUser(user_obj) {
     try {
-      const userPresent = await userRepositry.findUserById(user_obj.id);
+      const userPresent = await userRepositry.findUserById_NAME(
+        user_obj.id,
+        user_obj.username
+      );
       if (userPresent.rowCount <= 0) {
         return await userRepositry.createUser(user_obj);
       } else {
