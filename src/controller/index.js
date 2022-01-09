@@ -2,6 +2,7 @@ const express = require("express");
 const userRegister = require("./userRegister");
 const userAuthenticate = require("./userAuthenticate");
 const userController = require("./userController");
+const foodController = require("./foodController");
 const route = express();
 
 route.use("/register", userRegister);

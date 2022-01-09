@@ -1,4 +1,5 @@
 {
+  "type": "commonjs",
   "name": "food-app",
   "version": "1.0.0",
   "description": "Swiggyi++ Case-Study 'Food-APP' with CRUD operations on User and Food Items",
@@ -13,6 +14,7 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
+    "express-validator": "^6.14.0",
     "nodemon": "^2.0.15",
     "pg": "^8.7.1"
   }
